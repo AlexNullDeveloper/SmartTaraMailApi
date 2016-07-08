@@ -10,6 +10,9 @@ import java.sql.SQLException;
  */
 public class testingJDBC {
     public static void main(String[] args) throws SQLException, ClassNotFoundException, URISyntaxException {
+
+        //TODO достучаться таки до СУБД
+
         String urlDB = "jdbc:postgresql://ec2-54-228-219-2.eu-west-1.compute.amazonaws.com:5432/d9uj3i9nqu6vmq?" +
                 "sslmode=require&user=ttolakdstrfupa&password=Nn2Lvm_Lqrjz3RP1qsEJY5loTh";
 
@@ -25,6 +28,8 @@ public class testingJDBC {
     }
 
     private static Connection getConnection() throws URISyntaxException, SQLException {
+
+        //TODO переменную среды установить
 
         System.out.println(System.getenv("DATABASE_URL"));
 

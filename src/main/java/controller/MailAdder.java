@@ -1,15 +1,16 @@
 package controller;
 
 import ApplicationExceptions.AllreadyInFileException;
+import ApplicationExceptions.CantMakeDirsException;
 
 import java.io.*;
 
 /**
- * Created by ZXCASD on 06.07.2016.
+ * @author a.talismanov on 06.07.2016.
  */
 
 public class MailAdder {
-    static boolean isOk = true;
+    private static boolean isOk = true;
 
     public static boolean addMailIntoFile(String mail) {
         final String mailsPath = "C:\\mail\\csv";
@@ -21,8 +22,7 @@ public class MailAdder {
             try {
                 dirWithMails.mkdirs();
             } catch (SecurityException e) {
-                isOk = false;
-                e.printStackTrace();
+                throw new CantMakeDirsException("Can't make directories at " + mailsPath);
             }
         }
 

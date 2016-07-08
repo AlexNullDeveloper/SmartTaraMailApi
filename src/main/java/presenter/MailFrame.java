@@ -1,10 +1,11 @@
 package presenter;
 
 /**
- * Created by ZXCASD on 06.07.2016.
+ * @author on 06.07.2016.
  */
 
 import ApplicationExceptions.AllreadyInFileException;
+import ApplicationExceptions.CantMakeDirsException;
 import controller.MailAdder;
 import mailsender.EmailSender;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +38,7 @@ public class MailFrame extends JFrame {
         showingSendingButton = showSendingButton;
         init();
         setBounds(400, 200, 640, 480);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
@@ -105,6 +106,9 @@ public class MailFrame extends JFrame {
                 } catch (AllreadyInFileException e) {
                     JOptionPane.showMessageDialog(MailFrame.this, "ошибка! данная почта "
                                     + mailTextField.getText() + " уже есть в файле",
+                            "Ошибка", JOptionPane.ERROR_MESSAGE);
+                } catch (CantMakeDirsException e) {
+                    JOptionPane.showMessageDialog(MailFrame.this, "ошибка! неудалось создать создать используемый в программе путь",
                             "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
