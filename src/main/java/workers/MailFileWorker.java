@@ -1,4 +1,4 @@
-package controller;
+package workers;
 
 import ApplicationExceptions.AllreadyInFileException;
 import ApplicationExceptions.CantMakeDirsException;
@@ -9,7 +9,7 @@ import java.io.*;
  * @author a.talismanov on 06.07.2016.
  */
 
-public class MailAdder {
+public class MailFileWorker {
     private static boolean isOk = true;
 
     public static boolean addMailIntoFile(String mail) {

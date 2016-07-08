@@ -6,7 +6,9 @@ package presenter;
 
 import ApplicationExceptions.AllreadyInFileException;
 import ApplicationExceptions.CantMakeDirsException;
-import controller.MailAdder;
+import ApplicationExceptions.DublicateMailException;
+import workers.MailFileWorker;
+import workers.MailDBWorker;
 import mailsender.EmailSender;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,6 +22,7 @@ public class MailFrame extends JFrame {
     private JButton exitButton;
     private JTextField mailTextField;
     private boolean showingSendingButton;
+    private JButton addInDBButton;
 
     public JComboBox getCheckBoxEmails() {
         return checkBoxEmails;
@@ -96,7 +99,7 @@ public class MailFrame extends JFrame {
             if (!StringUtils.isBlank(mailTextField.getText())) {
 
                 try {
-                    if (MailAdder.addMailIntoFile(mailTextField.getText().trim())) {
+                    if (MailFileWorker.addMailIntoFile(mailTextField.getText().trim())) {
                         JOptionPane.showMessageDialog(MailFrame.this, "почта успешно добавлена в файл",
                                 "Успех", JOptionPane.INFORMATION_MESSAGE);
                     } else {
@@ -110,6 +113,27 @@ public class MailFrame extends JFrame {
                 } catch (CantMakeDirsException e) {
                     JOptionPane.showMessageDialog(MailFrame.this, "ошибка! неудалось создать создать используемый в программе путь",
                             "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(MailFrame.this, "Введите почту для добавления",
+                        "Ошибка", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        addInDBButton = new JButton("записать в базу");
+        southPanel.add(addInDBButton);
+        addInDBButton.addActionListener(ae -> {
+            if (!StringUtils.isBlank(mailTextField.getText())) {
+                try {
+                    MailDBWorker.addMailInDataBase(mailTextField
+                            .getText()
+                            .trim());
+                    JOptionPane.showMessageDialog(MailFrame.this, "почта успешно записана в базу",
+                            "Успех", JOptionPane.INFORMATION_MESSAGE);
+                } catch (DublicateMailException e) {
+                    JOptionPane.showMessageDialog(MailFrame.this, "Почта дублируется",
+                            "Ошибка", JOptionPane.WARNING_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(MailFrame.this, "Введите почту для добавления",
