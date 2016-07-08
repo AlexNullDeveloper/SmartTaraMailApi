@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Created by ZXCASD on 07.07.2016.
+ * @author a.talismanov  on 07.07.2016.
  */
 public class testingJDBC {
     public static void main(String[] args) throws SQLException, ClassNotFoundException, URISyntaxException {
@@ -34,9 +34,25 @@ public class testingJDBC {
 
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
 
-        dbUrl += "?sslmode=require&user="+username+"&password=" + password;
+        StringBuilder stringBuilderDbUrl = new StringBuilder();
+
+        stringBuilderDbUrl.append("jdbc:postgresql://")
+                .append(dbUri.getHost())
+                .append(':')
+                .append(dbUri.getPort())
+                .append(dbUri.getPath())
+                .append("?sslmode=require&user=")
+                .append(username)
+                .append("&password=")
+                .append(password);
+
+//        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+//
+//
+//        dbUrl += "?sslmode=require&user="+username+"&password=" + password;
+
+        String dbUrl = stringBuilderDbUrl.toString();
 
         System.out.println("DB URL = " + dbUrl);
 
