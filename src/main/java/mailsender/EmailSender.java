@@ -2,14 +2,20 @@ package mailsender;
 
 import Launcher.Launcher;
 import presenter.MailFrame;
+import util.JdbcHelper;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,6 +25,7 @@ import java.util.stream.Stream;
  */
 public class EmailSender {
 
+    public static final String AUDIT_INSERT_SQL = "INSERT INTO SENDED_MAILS(E_MAIL_FROM, E_MAIL_TO, SENDING_TIME) VALUES (?,?,now())";
 
     public static void sendTestEmail(MailFrame mailFrame) {
 
@@ -27,13 +34,13 @@ public class EmailSender {
         Properties props = getProperties();
 
         Session session = getSession(Launcher.getEmailFrom(), Launcher.getPassword(), props);
+        String mailTo = String.valueOf(mailFrame.getCheckBoxEmails().getSelectedItem());
 
         try {
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(Launcher.getEmailFrom()));
 
-            String mailTo = String.valueOf(mailFrame.getCheckBoxEmails().getSelectedItem());
 
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(mailTo));
@@ -45,66 +52,136 @@ public class EmailSender {
 
             Transport.send(message);
 
-            System.out.println("Done");
+            System.out.println("Done sending testEmail");
 
         } catch (javax.mail.AuthenticationFailedException e) {
             throw new RuntimeException(e);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = JdbcHelper.getConnection();
+            preparedStatement = connection.prepareStatement(AUDIT_INSERT_SQL);
+            preparedStatement.setString(1, Launcher.getEmailFrom());
+            preparedStatement.setString(2, mailTo);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            System.out.println("after commit");
+        } catch (SQLException | URISyntaxException e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            try {
+                preparedStatement.close();
+                connection.close();
+            } catch (SQLException SQLe) {
+                throw new RuntimeException("problem with closing resources");
+            }
+        }
     }
 
     public static void sendRealEmail(MailFrame mailFrame) {
-        String mailsFilePath = "C:\\mail\\csv\\mails.csv";
 
-        List<String> linesOfFile = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(mailsFilePath))) {
-            linesOfFile = stream.collect(Collectors.toList());
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String sql = "SELECT E_MAIL FROM EMAILS WHERE IS_SENDED = 0";
+        try {
+            connection = JdbcHelper.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            String e_mail = "";
+            while (resultSet.next()) {
+                e_mail = resultSet.getString("E_MAIL");
+                System.out.println("e_mail we working with " + e_mail);
 
-        } catch (IOException e) {
+                Properties props = getProperties();
+
+
+                Session session = getSession(Launcher.getEmailFrom(), Launcher.getPassword(), props);
+
+                try {
+                    sendMessageToEmail(session, e_mail);
+                    System.out.println("Успешно отправлено письмо на почту " + e_mail);
+                    sql = "UPDATE EMAILS SET IS_SENDED = 1 WHERE E_MAIL = ?";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1,e_mail);
+                    preparedStatement.executeUpdate();
+                    connection.commit();
+                    preparedStatement = connection.prepareStatement(AUDIT_INSERT_SQL);
+                    preparedStatement.setString(1, Launcher.getEmailFrom());
+                    preparedStatement.setString(2, e_mail);
+                    preparedStatement.executeUpdate();
+                    connection.commit();
+
+                } catch (MessagingException e) {
+                    connection.rollback();
+                    throw new RuntimeException(e);
+                }
+            }
+            System.out.println("закончились все почты");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
-        Map<String, String> emails = new HashMap<>();
-
-        linesOfFile.forEach(s -> {
-            String[] tempArrOfStr = s.split(";");
-            emails.put(tempArrOfStr[0], tempArrOfStr[1]);
-        });
-
-        Properties props = getProperties();
-
-
-        Session session = getSession(Launcher.getEmailFrom(), Launcher.getPassword(), props);
-
-        for (Map.Entry<String, String> email : emails.entrySet()) {
-
-            String emailStr = email.getKey();
-            String sendedOrNot = email.getValue();
-
-            try {
-
-                if (Integer.parseInt(sendedOrNot) == 0) {
-                    sendMessageToEmail(session, emailStr);
-                    sendedOrNot = "1";
-                    emails.put(emailStr, sendedOrNot);
-                }
-                System.out.println("Успешно отправлено письмо на почту " + email);
-
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
-            }
-
-            try (FileWriter fileWriter = new FileWriter(mailsFilePath)) {
-                fileWriter.write(emailStr);
-                fileWriter.write(";");
-                fileWriter.write(sendedOrNot);
-                fileWriter.write(";");
-                fileWriter.write("\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        String mailsFilePath = "C:\\mail\\csv\\mails.csv";
+//
+//        List<String> linesOfFile = new ArrayList<>();
+//        try (Stream<String> stream = Files.lines(Paths.get(mailsFilePath))) {
+//            linesOfFile = stream.collect(Collectors.toList());
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Map<String, String> emails = new HashMap<>();
+//
+//        linesOfFile.forEach(s -> {
+//            String[] tempArrOfStr = s.split(";");
+//            emails.put(tempArrOfStr[0], tempArrOfStr[1]);
+//        });
+//
+//        Properties props = getProperties();
+//
+//
+//        Session session = getSession(Launcher.getEmailFrom(), Launcher.getPassword(), props);
+//
+//        for (Map.Entry<String, String> email : emails.entrySet()) {
+//
+//            String emailStr = email.getKey();
+//            String sendedOrNot = email.getValue();
+//
+//            try {
+//
+//                if (Integer.parseInt(sendedOrNot) == 0) {
+//                    sendMessageToEmail(session, emailStr);
+//                    sendedOrNot = "1";
+//                    emails.put(emailStr, sendedOrNot);
+//                }
+//                System.out.println("Успешно отправлено письмо на почту " + email);
+//
+//            } catch (MessagingException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            try (FileWriter fileWriter = new FileWriter(mailsFilePath)) {
+//                fileWriter.write(emailStr);
+//                fileWriter.write(";");
+//                fileWriter.write(sendedOrNot);
+//                fileWriter.write(";");
+//                fileWriter.write("\n");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private static void sendMessageToEmail(Session session, String email) throws MessagingException {

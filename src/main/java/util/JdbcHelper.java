@@ -72,7 +72,10 @@ public class JdbcHelper {
 
         System.out.println("DB URL = " + dbUrl);
 
-        return DriverManager.getConnection(dbUrl, username, password);
+        Connection connection = DriverManager.getConnection(dbUrl, username, password);
+        connection.setAutoCommit(false);
+
+        return connection;
     }
 
 }
