@@ -4,11 +4,20 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 /**
  * @author a.talismanov  on 07.07.2016.
  */
 public class JdbcHelper {
+
+    private static Logger log = Logger.getLogger(JdbcHelper.class.getName());
+
     public static void main(String[] args) throws SQLException, ClassNotFoundException, URISyntaxException {
+
+
+        BasicConfigurator.configure();
 
         //TODO достучаться таки до СУБД
 
@@ -21,37 +30,19 @@ public class JdbcHelper {
 
         Connection connection = getConnection();
 
-        connection.setAutoCommit(false);
-        PreparedStatement preparedStatement = null;
-        try {
-            preparedStatement = connection.prepareStatement("DROP TABLE t1");
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("DROP TABLE PROBLEM");
-        }
-        preparedStatement = connection.prepareStatement("CREATE TABLE t1(ID INTEGER)");
-        preparedStatement.executeUpdate();
-        System.out.println("after create");
-        preparedStatement = connection.prepareStatement("INSERT INTO t1 VALUES (1)");
-        System.out.println("after insert");
-        preparedStatement.executeUpdate();
-        connection.commit();
-        preparedStatement = connection.prepareStatement("SELECT * FROM t1");
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        if (resultSet.next()) {
-            System.out.println(resultSet.getInt(1));
-        }
-        System.out.println("is OK");
+        log.debug("is OK");
     }
 
     public static Connection getConnection() throws URISyntaxException, SQLException {
 
-        System.out.println(System.getenv("DATABASE_URL"));
+        log.info("getConnection...");
 
         URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
-        System.out.println(dbUri);
+        log.debug(dbUri);
+
+
+        log.debug("before split");
 
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
@@ -70,7 +61,7 @@ public class JdbcHelper {
 
         String dbUrl = stringBuilderDbUrl.toString();
 
-        System.out.println("DB URL = " + dbUrl);
+        log.debug("DB URL = " + dbUrl);
 
         Connection connection = DriverManager.getConnection(dbUrl, username, password);
         connection.setAutoCommit(false);

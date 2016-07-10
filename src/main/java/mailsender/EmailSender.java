@@ -25,11 +25,12 @@ import java.util.stream.Stream;
  */
 public class EmailSender {
 
-    public static final String AUDIT_INSERT_SQL = "INSERT INTO SENDED_MAILS(E_MAIL_FROM, E_MAIL_TO, SENDING_TIME) VALUES (?,?,now())";
+    private static final String AUDIT_INSERT_SQL = "INSERT INTO SENDED_MAILS(E_MAIL_FROM, E_MAIL_TO, SENDING_TIME) VALUES (?,?,now())";
 
     public static void sendTestEmail(MailFrame mailFrame) {
 
-        System.out.println("sendTestEmail");
+
+        Launcher.logger.debug("sendTestEmail");
 
         Properties props = getProperties();
 
@@ -52,11 +53,13 @@ public class EmailSender {
 
             Transport.send(message);
 
-            System.out.println("Done sending testEmail");
+            Launcher.logger.debug("Done sending testEmail");
 
         } catch (javax.mail.AuthenticationFailedException e) {
+            Launcher.logger.fatal("Ошибка аутентификации", e);
             throw new RuntimeException(e);
         } catch (MessagingException e) {
+            Launcher.logger.fatal("MessagingException",e);
             throw new RuntimeException(e);
         }
 
@@ -70,18 +73,20 @@ public class EmailSender {
             preparedStatement.setString(2, mailTo);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("after commit");
+            Launcher.logger.debug("after commit");
         } catch (SQLException | URISyntaxException e) {
-            e.printStackTrace();
+            Launcher.logger.error("AUDIT INSERT EXCEPTION", e);
             try {
                 connection.rollback();
             } catch (SQLException e1) {
+                Launcher.logger.fatal("failed to rollback", e1);
                 e1.printStackTrace();
             }
             try {
                 preparedStatement.close();
                 connection.close();
             } catch (SQLException SQLe) {
+                Launcher.logger.fatal("SQLException", SQLe);
                 throw new RuntimeException("problem with closing resources");
             }
         }
@@ -100,7 +105,7 @@ public class EmailSender {
             String e_mail = "";
             while (resultSet.next()) {
                 e_mail = resultSet.getString("E_MAIL");
-                System.out.println("e_mail we working with " + e_mail);
+                Launcher.logger.debug("e_mail we working with " + e_mail);
 
                 Properties props = getProperties();
 
@@ -109,7 +114,7 @@ public class EmailSender {
 
                 try {
                     sendMessageToEmail(session, e_mail);
-                    System.out.println("Успешно отправлено письмо на почту " + e_mail);
+                    Launcher.logger.debug("Успешно отправлено письмо на почту " + e_mail);
                     sql = "UPDATE EMAILS SET IS_SENDED = 1 WHERE E_MAIL = ?";
                     preparedStatement = connection.prepareStatement(sql);
                     preparedStatement.setString(1,e_mail);
@@ -120,17 +125,16 @@ public class EmailSender {
                     preparedStatement.setString(2, e_mail);
                     preparedStatement.executeUpdate();
                     connection.commit();
-
+                    Launcher.logger.debug("добавили в таблицу почту " + e_mail);
                 } catch (MessagingException e) {
+                    Launcher.logger.fatal("MessagingException",e);
                     connection.rollback();
                     throw new RuntimeException(e);
                 }
             }
-            System.out.println("закончились все почты");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Launcher.logger.debug("закончились все почты");
+        } catch (SQLException | URISyntaxException e) {
+            Launcher.logger.error("Exception in EmailSender",e);
         }
 //        String mailsFilePath = "C:\\mail\\csv\\mails.csv";
 //
@@ -166,7 +170,7 @@ public class EmailSender {
 //                    sendedOrNot = "1";
 //                    emails.put(emailStr, sendedOrNot);
 //                }
-//                System.out.println("Успешно отправлено письмо на почту " + email);
+//                Launcher.logger.debug("Успешно отправлено письмо на почту " + email);
 //
 //            } catch (MessagingException e) {
 //                throw new RuntimeException(e);
@@ -242,7 +246,7 @@ public class EmailSender {
             message.setText(textOfMessage);
             Transport.send(message);
 
-            System.out.println("Done");
+            Launcher.logger.debug("Done");
 
         } catch (MessagingException e) {
             throw new RuntimeException(e);
@@ -277,7 +281,7 @@ public class EmailSender {
 
         String smtphost = getSmtpHostByMail();
 
-        props.put("mail.smtp.host", smtphost);//было "smtp.gmail.com"
+        props.put("mail.smtp.host", smtphost);
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class",
                 "javax.net.ssl.SSLSocketFactory");

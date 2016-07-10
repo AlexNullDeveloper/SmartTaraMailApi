@@ -1,12 +1,9 @@
 package presenter;
 
-/**
- * @author on 06.07.2016.
- */
-
 import ApplicationExceptions.AllreadyInFileException;
 import ApplicationExceptions.CantMakeDirsException;
 import ApplicationExceptions.DublicateMailException;
+import Launcher.Launcher;
 import workers.MailFileWorker;
 import workers.MailDBWorker;
 import mailsender.EmailSender;
@@ -16,6 +13,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * @author a.talismanov on 06.07.2016.
+ */
 public class MailFrame extends JFrame {
     private JButton addInFileButton;
     private JButton sendMailButton;
@@ -47,6 +47,7 @@ public class MailFrame extends JFrame {
 
     private void init() {
 
+        Launcher.logger.debug("initializing components");
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JRadioButton radioButtonTesting = new JRadioButton("Тестовая отправка");
@@ -95,6 +96,7 @@ public class MailFrame extends JFrame {
         addInFileButton = new JButton("добавить в файл");
         southPanel.add(addInFileButton);
         addInFileButton.addActionListener(ae -> {
+            Launcher.logger.debug("addInFileButton pressed");
 
             if (!StringUtils.isBlank(mailTextField.getText())) {
 
@@ -107,10 +109,13 @@ public class MailFrame extends JFrame {
                                 "Ошибка", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (AllreadyInFileException e) {
+                    Launcher.logger.error("ошибка! данная почта "
+                            + mailTextField.getText() + " уже есть в файле", e);
                     JOptionPane.showMessageDialog(MailFrame.this, "ошибка! данная почта "
                                     + mailTextField.getText() + " уже есть в файле",
                             "Ошибка", JOptionPane.ERROR_MESSAGE);
                 } catch (CantMakeDirsException e) {
+                    Launcher.logger.fatal("ошибка! неудалось создать создать используемый в программе путь",e);
                     JOptionPane.showMessageDialog(MailFrame.this, "ошибка! неудалось создать создать используемый в программе путь",
                             "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
@@ -132,6 +137,7 @@ public class MailFrame extends JFrame {
                     JOptionPane.showMessageDialog(MailFrame.this, "почта успешно записана в базу",
                             "Успех", JOptionPane.INFORMATION_MESSAGE);
                 } catch (DublicateMailException e) {
+                    Launcher.logger.error("Почта дублируется", e);
                     JOptionPane.showMessageDialog(MailFrame.this, "Почта дублируется",
                             "Ошибка", JOptionPane.WARNING_MESSAGE);
                 }

@@ -1,6 +1,7 @@
 package workers;
 
 import ApplicationExceptions.DublicateMailException;
+import Launcher.Launcher;
 import util.JdbcHelper;
 
 import java.net.URISyntaxException;
@@ -19,7 +20,7 @@ public class MailDBWorker {
             connection = JdbcHelper.getConnection();
             connection.setAutoCommit(false);
         } catch (SQLException | URISyntaxException e) {
-            System.out.println("something wrong with Connection");
+            Launcher.logger.fatal("something wrong with Connection",e);
             throw new RuntimeException(e);
         }
 
@@ -33,17 +34,18 @@ public class MailDBWorker {
             connection.commit();
         } catch (SQLException e) {
 
-            System.out.println("e.getMessage()" + e.getMessage());
+            Launcher.logger.debug("e.getMessage()" + e.getMessage());
             try {
                 connection.rollback();
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
-//            System.out.println("e.getSQLState()" + e.getSQLState());
+//            Launcher.logger.debug("e.getSQLState()" + e.getSQLState());
             if (e.getSQLState().equals(DUBLICATE_KEY_VALUE_ERROR)) {
+                Launcher.logger.error("DublicateMailException",e);
                 throw new DublicateMailException(e.getMessage());
             }
         }
-        System.out.println("insert transaction finished. Everything is fine");
+        Launcher.logger.debug("insert transaction finished. Everything is fine");
     }
 }

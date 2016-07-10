@@ -2,6 +2,7 @@ package workers;
 
 import ApplicationExceptions.AllreadyInFileException;
 import ApplicationExceptions.CantMakeDirsException;
+import Launcher.Launcher;
 
 import java.io.*;
 
@@ -17,11 +18,12 @@ public class MailFileWorker {
         File dirWithMails = new File(mailsPath);
 
         if (!dirWithMails.exists()) {
-            System.out.println("creating folders");
+            Launcher.logger.debug("creating folders");
 
             try {
                 dirWithMails.mkdirs();
             } catch (SecurityException e) {
+                Launcher.logger.fatal("Can't make directories at " + mailsPath, e);
                 throw new CantMakeDirsException("Can't make directories at " + mailsPath);
             }
         }
@@ -40,15 +42,15 @@ public class MailFileWorker {
             while ((str = bufferedReader.readLine()) != null) {
                 String[] temp = str.split(";");
                 if (mail.equals(temp[0])) {
-                    System.out.println("mail = " + mail);
-                    System.out.println("temp[0] = " + temp[0]);
+                    Launcher.logger.debug("mail = " + mail);
+                    Launcher.logger.debug("temp[0] = " + temp[0]);
                     throw new AllreadyInFileException();
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Launcher.logger.fatal("FileNotFoundException", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Launcher.logger.fatal("IOException", e);
         }
 
         try (FileWriter fileWriter = new FileWriter(pathToFile, true)) {
@@ -58,8 +60,8 @@ public class MailFileWorker {
             fileWriter.write(";");
             fileWriter.write("\n");
         } catch (IOException e) {
+            Launcher.logger.fatal("IOException", e);
             isOk = false;
-            e.printStackTrace();
         }
     }
 }
