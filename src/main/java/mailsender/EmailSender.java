@@ -194,6 +194,7 @@ public class EmailSender {
     }
 
     private static String getMessageString() {
+        //TODO убрать в базу
         return "Компания Smarttara поможет Вам в разработке и изготовлении" +
                 " промышленной и транспортной тары различной сложности.\n" +
                 "\n" +
@@ -265,7 +266,7 @@ public class EmailSender {
         message.setFrom(new InternetAddress(Launcher.getEmailFrom()));
         message.setRecipients(Message.RecipientType.TO,
                 InternetAddress.parse(emailTo));
-        //TODO заменить на правильное
+        //TODO заменить на правильное и убрать в базу
         message.setSubject("Коммерческое предложение");
     }
 

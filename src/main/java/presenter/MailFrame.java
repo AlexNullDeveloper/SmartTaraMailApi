@@ -40,6 +40,7 @@ public class MailFrame extends JFrame {
         super(nameOfFrame);
         showingSendingButton = showSendingButton;
         init();
+        //TODO правильные отступы у экрана замутить от размера экрана
         setBounds(400, 200, 640, 480);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -47,7 +48,7 @@ public class MailFrame extends JFrame {
 
     private void init() {
 
-        Launcher.logger.debug("initializing components");
+        Launcher.logger.debug("initializing components of MainFrame");
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JRadioButton radioButtonTesting = new JRadioButton("Тестовая отправка");
@@ -74,6 +75,7 @@ public class MailFrame extends JFrame {
         JLabel testEmailLabel = new JLabel("Тестовая почта");
         testEmailLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
+        //TODO убрать в базу
         String[] testEmailsListing = {
                 "talismanoff1990@yandex.ru",
                 "mslide@mail.ru"
