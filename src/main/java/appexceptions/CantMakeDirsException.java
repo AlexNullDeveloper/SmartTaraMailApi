@@ -1,4 +1,4 @@
-package ApplicationExceptions;
+package appexceptions;
 
 /**
  * @author a.talismanov on 08.07.2016.

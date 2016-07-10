@@ -1,24 +1,18 @@
 package mailsender;
 
-import Launcher.Launcher;
+import launcher.Launcher;
 import presenter.MailFrame;
 import util.JdbcHelper;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by a.talismanov on 07.07.2016.

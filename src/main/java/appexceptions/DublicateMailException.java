@@ -1,4 +1,4 @@
-package ApplicationExceptions;
+package appexceptions;
 
 /**
  * Created by ZXCASD on 08.07.2016.

@@ -1,9 +1,9 @@
 package presenter;
 
-import ApplicationExceptions.AllreadyInFileException;
-import ApplicationExceptions.CantMakeDirsException;
-import ApplicationExceptions.DublicateMailException;
-import Launcher.Launcher;
+import appexceptions.AllreadyInFileException;
+import appexceptions.CantMakeDirsException;
+import appexceptions.DublicateMailException;
+import launcher.Launcher;
 import workers.MailFileWorker;
 import workers.MailDBWorker;
 import mailsender.EmailSender;

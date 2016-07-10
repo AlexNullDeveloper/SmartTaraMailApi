@@ -1,4 +1,4 @@
-package Launcher;
+package launcher;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -34,9 +34,23 @@ public class Launcher {
             logger.debug("args.length == 2");
             emailFrom = args[0];
             password = args[1];
-            SwingUtilities.invokeLater(() -> new MailFrame("Работа с почтой", SHOW_SEND_BUTTON));
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+                } catch (Exception e) {
+                    logger.error("Exception", e);
+                }
+                new MailFrame("Работа с почтой", SHOW_SEND_BUTTON);
+            });
         } else {
-            SwingUtilities.invokeLater(() -> new MailFrame("Работа с почтой", DONT_SHOW_SEND_BUTTON));
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+                } catch (Exception e) {
+                    logger.error("Exception", e);
+                }
+                new MailFrame("Работа с почтой", DONT_SHOW_SEND_BUTTON);
+            });
         }
     }
 }

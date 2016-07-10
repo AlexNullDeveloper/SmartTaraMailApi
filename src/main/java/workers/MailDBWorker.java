@@ -1,7 +1,7 @@
 package workers;
 
-import ApplicationExceptions.DublicateMailException;
-import Launcher.Launcher;
+import appexceptions.DublicateMailException;
+import launcher.Launcher;
 import util.JdbcHelper;
 
 import java.net.URISyntaxException;
