@@ -40,7 +40,11 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
+                            <addClasspath>true</addClasspath>
                             <mainClass>launcher.Launcher</mainClass>
+                            <packageName>launcher</packageName>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
                 </configuration>
