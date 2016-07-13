@@ -271,7 +271,7 @@ public class EmailSender {
     }
 
 
-    private static Properties getProperties() {
+    static Properties getProperties() {
         Properties props = new Properties();
 
         String smtphost = getSmtpHostByMail();
@@ -286,7 +286,6 @@ public class EmailSender {
     }
 
     private static String getSmtpHostByMail() {
-
         String workingWith = Launcher.getEmailFrom();
 
         int index = workingWith.indexOf("@");

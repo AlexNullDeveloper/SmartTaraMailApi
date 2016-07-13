@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 public class MailDBWorker {
     private static final String DUBLICATE_KEY_VALUE_ERROR = "23505";
-    public static void addMailInDataBase(String mail) {
+    public static void addMailInDataBase(String mail, String companyName) {
         Connection connection = null;
         try {
             connection = JdbcHelper.getConnection();
@@ -24,12 +24,13 @@ public class MailDBWorker {
             throw new RuntimeException(e);
         }
 
-        String sql = "INSERT INTO EMAILS(E_MAIL, IS_SENDED) VALUES (?,0)";
+        String sql = "INSERT INTO EMAILS(E_MAIL, IS_SENDED, COMPANY_NAME) VALUES (?,0,?)";
 
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,mail);
+            preparedStatement.setString(2,companyName);
             preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {

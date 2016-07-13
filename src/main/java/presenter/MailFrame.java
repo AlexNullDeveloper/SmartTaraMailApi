@@ -23,6 +23,7 @@ public class MailFrame extends JFrame {
     private JTextField mailTextField;
     private boolean showingSendingButton;
     private JButton addInDBButton;
+    private JTextField companyTextField;
 
     public JComboBox getCheckBoxEmails() {
         return checkBoxEmails;
@@ -71,6 +72,13 @@ public class MailFrame extends JFrame {
         mailTextField = new JTextField(20);
         centerPanel.add(mailLabel);
         centerPanel.add(mailTextField);
+
+        JLabel companyLabel = new JLabel("Название компании");
+        companyLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        companyTextField = new JTextField(20);
+        centerPanel.add(companyLabel);
+        centerPanel.add(companyTextField);
+
 
         JLabel testEmailLabel = new JLabel("Тестовая почта");
         testEmailLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -133,9 +141,8 @@ public class MailFrame extends JFrame {
         addInDBButton.addActionListener(ae -> {
             if (!StringUtils.isBlank(mailTextField.getText())) {
                 try {
-                    MailDBWorker.addMailInDataBase(mailTextField
-                            .getText()
-                            .trim());
+                    MailDBWorker.addMailInDataBase(mailTextField.getText().trim(),
+                            companyTextField.getText().trim());
                     JOptionPane.showMessageDialog(MailFrame.this, "почта успешно записана в базу",
                             "Успех", JOptionPane.INFORMATION_MESSAGE);
                 } catch (DublicateMailException e) {
