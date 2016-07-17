@@ -62,7 +62,7 @@ public class MailFrame extends JFrame {
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridLayout(10, 2, 5, 5));
-//        centerPanel.setLayout(new FlowLayout());
+        //отступы слева справа по 100
         centerPanel.setBorder(new EmptyBorder(100, 20, 20, 100));
 
         JLabel mailLabel = new JLabel("Новая почта");
@@ -90,7 +90,6 @@ public class MailFrame extends JFrame {
 
         centerPanel.add(testEmailLabel);
         centerPanel.add(checkBoxEmails);
-
 
         //декорация для нормального отображения
         for (int i = 0; i < 8; i++) {
@@ -171,5 +170,4 @@ public class MailFrame extends JFrame {
 
         getContentPane().add(southPanel, BorderLayout.SOUTH);
     }
-
 }

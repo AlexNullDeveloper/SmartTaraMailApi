@@ -15,14 +15,7 @@ import java.sql.SQLException;
 public class MailDBWorker {
     private static final String DUBLICATE_KEY_VALUE_ERROR = "23505";
     public static void addMailInDataBase(String mail, String companyName) {
-        Connection connection = null;
-        try {
-            connection = JdbcHelper.getConnection();
-            connection.setAutoCommit(false);
-        } catch (SQLException | URISyntaxException e) {
-            Launcher.logger.fatal("something wrong with Connection",e);
-            throw new RuntimeException(e);
-        }
+        Connection connection = JdbcHelper.getConnection();
 
         String sql = "INSERT INTO EMAILS(E_MAIL, IS_SENDED, COMPANY_NAME) VALUES (?,0,?)";
 

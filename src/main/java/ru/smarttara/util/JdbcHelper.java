@@ -12,6 +12,9 @@ import org.apache.log4j.Logger;
  */
 public class JdbcHelper {
 
+    private JdbcHelper() {
+    }
+
     private static Logger log = Logger.getLogger(JdbcHelper.class.getName());
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, URISyntaxException {
@@ -33,19 +36,28 @@ public class JdbcHelper {
         log.debug("is OK");
     }
 
-    public static Connection getConnection() throws URISyntaxException, SQLException {
+    public static Connection getConnection() {
 
         log.info("getConnection...");
 
-        URI dbUri = new URI(System.getenv("DATABASE_URL"));
+        URI dbUri = null;
+        try {
+            dbUri = new URI(System.getenv("DATABASE_URL"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
-        log.debug(dbUri);
+        log.debug("dbUri " + dbUri);
 
 
         log.debug("before split");
 
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":")[1];
+        String username = dbUri
+                .getUserInfo()
+                .split(":")[0];
+        String password = dbUri
+                .getUserInfo()
+                .split(":")[1];
 
         StringBuilder stringBuilderDbUrl = new StringBuilder();
 
@@ -63,8 +75,13 @@ public class JdbcHelper {
 
         log.debug("DB URL = " + dbUrl);
 
-        Connection connection = DriverManager.getConnection(dbUrl, username, password);
-        connection.setAutoCommit(false);
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(dbUrl, username, password);
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         return connection;
     }

@@ -68,7 +68,7 @@ public class EmailSender {
             preparedStatement.executeUpdate();
             connection.commit();
             Launcher.logger.debug("after commit");
-        } catch (SQLException | URISyntaxException e) {
+        } catch (SQLException e) {
             Launcher.logger.error("AUDIT INSERT EXCEPTION", e);
             try {
                 connection.rollback();
@@ -127,59 +127,9 @@ public class EmailSender {
                 }
             }
             Launcher.logger.debug("закончились все почты");
-        } catch (SQLException | URISyntaxException e) {
+        } catch (SQLException e) {
             Launcher.logger.error("Exception in EmailSender",e);
         }
-//        String mailsFilePath = "C:\\mail\\csv\\mails.csv";
-//
-//        List<String> linesOfFile = new ArrayList<>();
-//        try (Stream<String> stream = Files.lines(Paths.get(mailsFilePath))) {
-//            linesOfFile = stream.collect(Collectors.toList());
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Map<String, String> emails = new HashMap<>();
-//
-//        linesOfFile.forEach(s -> {
-//            String[] tempArrOfStr = s.split(";");
-//            emails.put(tempArrOfStr[0], tempArrOfStr[1]);
-//        });
-//
-//        Properties props = getProperties();
-//
-//
-//        Session session = getSession(Launcher.getEmailFrom(), Launcher.getPassword(), props);
-//
-//        for (Map.Entry<String, String> email : emails.entrySet()) {
-//
-//            String emailStr = email.getKey();
-//            String sendedOrNot = email.getValue();
-//
-//            try {
-//
-//                if (Integer.parseInt(sendedOrNot) == 0) {
-//                    sendMessageToEmail(session, emailStr);
-//                    sendedOrNot = "1";
-//                    emails.put(emailStr, sendedOrNot);
-//                }
-//                Launcher.logger.debug("Успешно отправлено письмо на почту " + email);
-//
-//            } catch (MessagingException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//            try (FileWriter fileWriter = new FileWriter(mailsFilePath)) {
-//                fileWriter.write(emailStr);
-//                fileWriter.write(";");
-//                fileWriter.write(sendedOrNot);
-//                fileWriter.write(";");
-//                fileWriter.write("\n");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     private static void sendMessageToEmail(Session session, String email) throws MessagingException {
