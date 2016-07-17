@@ -1,4 +1,4 @@
-package appexceptions;
+package ru.smarttara.appexceptions;
 
 /**
  * @author a.talismanov on 08.07.2016.

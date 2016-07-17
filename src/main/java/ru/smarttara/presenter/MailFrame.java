@@ -1,12 +1,12 @@
-package presenter;
+package ru.smarttara.presenter;
 
-import appexceptions.AllreadyInFileException;
-import appexceptions.CantMakeDirsException;
-import appexceptions.DublicateMailException;
-import launcher.Launcher;
-import workers.MailFileWorker;
-import workers.MailDBWorker;
-import mailsender.EmailSender;
+import ru.smarttara.appexceptions.AllreadyInFileException;
+import ru.smarttara.appexceptions.CantMakeDirsException;
+import ru.smarttara.appexceptions.DublicateMailException;
+import ru.smarttara.launcher.Launcher;
+import ru.smarttara.workers.MailFileWorker;
+import ru.smarttara.workers.MailDBWorker;
+import ru.smarttara.mailsender.EmailSender;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -47,7 +47,7 @@ public class MailFrame extends JFrame {
 
     private void init() {
 
-        Launcher.logger.debug("initializing components of mainFrame");
+        Launcher.logger.debug("initializing components of ru.smarttara.mainFrame");
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JRadioButton radioButtonTesting = new JRadioButton("Тестовая отправка");

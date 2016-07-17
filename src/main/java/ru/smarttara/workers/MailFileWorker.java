@@ -1,8 +1,8 @@
-package workers;
+package ru.smarttara.workers;
 
-import appexceptions.AllreadyInFileException;
-import appexceptions.CantMakeDirsException;
-import launcher.Launcher;
+import ru.smarttara.appexceptions.AllreadyInFileException;
+import ru.smarttara.appexceptions.CantMakeDirsException;
+import ru.smarttara.launcher.Launcher;
 
 import java.io.*;
 

@@ -1,8 +1,8 @@
-package mailsender;
+package ru.smarttara.mailsender;
 
-import launcher.Launcher;
-import presenter.MailFrame;
-import util.JdbcHelper;
+import ru.smarttara.launcher.Launcher;
+import ru.smarttara.presenter.MailFrame;
+import ru.smarttara.util.JdbcHelper;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

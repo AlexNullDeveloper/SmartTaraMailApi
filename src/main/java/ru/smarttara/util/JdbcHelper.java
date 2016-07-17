@@ -1,4 +1,4 @@
-package util;
+package ru.smarttara.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;

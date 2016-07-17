@@ -1,4 +1,4 @@
-package version;
+package ru.smarttara.version;
 
 
 import javax.swing.*;

@@ -1,4 +1,4 @@
-package mailsender;
+package ru.smarttara.mailsender;
 
 import javax.mail.*;
 import java.util.Properties;

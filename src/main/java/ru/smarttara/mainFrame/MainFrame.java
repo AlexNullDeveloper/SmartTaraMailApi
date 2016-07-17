@@ -1,11 +1,11 @@
-package mainFrame;
+package ru.smarttara.mainFrame;
 
 /**
  * Created by ZXCASD on 17.07.2016.
  */
 
-import presenter.MailFrame;
-import version.VersionFrame;
+import ru.smarttara.presenter.MailFrame;
+import ru.smarttara.version.VersionFrame;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;

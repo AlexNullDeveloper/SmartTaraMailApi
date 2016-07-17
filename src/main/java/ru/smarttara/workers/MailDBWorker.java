@@ -1,8 +1,8 @@
-package workers;
+package ru.smarttara.workers;
 
-import appexceptions.DublicateMailException;
-import launcher.Launcher;
-import util.JdbcHelper;
+import ru.smarttara.appexceptions.DublicateMailException;
+import ru.smarttara.launcher.Launcher;
+import ru.smarttara.util.JdbcHelper;
 
 import java.net.URISyntaxException;
 import java.sql.Connection;

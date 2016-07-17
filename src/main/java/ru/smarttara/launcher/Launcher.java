@@ -1,6 +1,6 @@
-package launcher;
+package ru.smarttara.launcher;
 
-import mainFrame.MainFrame;
+import ru.smarttara.mainFrame.MainFrame;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
