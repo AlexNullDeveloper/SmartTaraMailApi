@@ -4,6 +4,7 @@ package ru.smarttara.mainFrame;
  * Created by ZXCASD on 17.07.2016.
  */
 
+import ru.smarttara.catalogs.CatalogOfEmails;
 import ru.smarttara.presenter.MailFrame;
 import ru.smarttara.version.VersionFrame;
 
@@ -49,6 +50,11 @@ public class MainFrame extends JFrame {
 
     private JMenu initCatalogMenu() {
         JMenu catalogsMenu = new JMenu("Каталоги");
+
+        JMenuItem emailCatItem = new JMenuItem("каталог Emailов");
+
+        emailCatItem.addActionListener(ae -> new CatalogOfEmails("Каталог электронный почт"));
+        catalogsMenu.add(emailCatItem);
 
         JMenuItem versionItem = new JMenuItem("Версия АБС");
         versionItem.addActionListener(e -> new VersionFrame("Версия"));
