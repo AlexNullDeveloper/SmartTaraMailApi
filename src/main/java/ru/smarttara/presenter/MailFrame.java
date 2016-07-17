@@ -123,7 +123,7 @@ public class MailFrame extends JFrame {
                                     + mailTextField.getText() + " уже есть в файле",
                             "Ошибка", JOptionPane.ERROR_MESSAGE);
                 } catch (CantMakeDirsException e) {
-                    Launcher.logger.fatal("ошибка! неудалось создать создать используемый в программе путь",e);
+                    Launcher.logger.fatal("ошибка! неудалось создать создать используемый в программе путь", e);
                     JOptionPane.showMessageDialog(MailFrame.this, "ошибка! неудалось создать создать используемый в программе путь",
                             "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
