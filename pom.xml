@@ -17,18 +17,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-compiler-plugin</artifactId>-->
-                <!--<version>2.5.1</version>-->
-                <!--<configuration>-->
-                    <!--<source>1.8</source>-->
-                    <!--<target>1.8</target>-->
-                    <!--<optimize>true</optimize>-->
-                    <!--<debug>true</debug>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.3</version>
@@ -58,9 +46,7 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
-
     </build>
 
     <dependencies>
@@ -69,35 +55,28 @@
             <artifactId>javax.mail-api</artifactId>
             <version>1.5.2</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
         <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
             <version>1.1</version>
         </dependency>
-
-
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.5.5</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.4.1208</version>
         </dependency>
-
         <dependency>
             <groupId>com.sparkjava</groupId>
             <artifactId>spark-core</artifactId>
@@ -108,11 +87,6 @@
             <artifactId>spark-template-freemarker</artifactId>
             <version>2.0.0</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.postgresql</groupId>-->
-            <!--<artifactId>postgresql</artifactId>-->
-            <!--<version>9.4-1201-jdbc4</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -123,7 +97,6 @@
             <artifactId>heroku-jdbc</artifactId>
             <version>0.1.1</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/log4j/log4j -->
         <dependency>
             <groupId>log4j</groupId>
@@ -131,33 +104,6 @@
             <version>1.2.17</version>
         </dependency>
 
-
-        <!-- testiruem SWT убрать потом -->
-        <!-- https://mvnrepository.com/artifact/org.eclipse.swt/org.eclipse.swt.win32.win32.x86 -->
-        <!--<dependency>-->
-            <!--<groupId>org.eclipse.swt</groupId>-->
-            <!--<artifactId>org.eclipse.swt.win32.win32.x86</artifactId>-->
-            <!--<version>4.3</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.eclipse.swt.win32.win32/x86 &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.eclipse.swt.win32.win32</groupId>-->
-            <!--<artifactId>x86</artifactId>-->
-            <!--<version>3.3.0-v3346</version>-->
-        <!--</dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/org.eclipse.swt.org.eclipse.swt.win32.win32.x86_64.4.3.swt/org.eclipse.swt.win32.win32.x86_64 -->
-        <dependency>
-            <groupId>org.eclipse.swt.org.eclipse.swt.win32.win32.x86_64.4.3.swt</groupId>
-            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
-            <version>4.3</version>
-        </dependency>
-
-
-
-
     </dependencies>
-
 
 </project>

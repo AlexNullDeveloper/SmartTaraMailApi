@@ -21,7 +21,6 @@ public class MailFrame extends JFrame {
     private JButton sendMailButton;
     private JButton exitButton;
     private JTextField mailTextField;
-    private boolean showingSendingButton;
     private JButton addInDBButton;
     private JTextField companyTextField;
 
@@ -37,9 +36,8 @@ public class MailFrame extends JFrame {
 
     private ButtonGroup buttonGroup;
 
-    public MailFrame(String nameOfFrame, boolean showSendingButton) {
+    public MailFrame(String nameOfFrame) {
         super(nameOfFrame);
-        showingSendingButton = showSendingButton;
         init();
         //TODO правильные отступы у экрана замутить от размера экрана
         setBounds(400, 200, 640, 480);
@@ -49,7 +47,7 @@ public class MailFrame extends JFrame {
 
     private void init() {
 
-        Launcher.logger.debug("initializing components of MainFrame");
+        Launcher.logger.debug("initializing components of mainFrame");
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JRadioButton radioButtonTesting = new JRadioButton("Тестовая отправка");
@@ -170,9 +168,6 @@ public class MailFrame extends JFrame {
         exitButton = new JButton("Выход");
         southPanel.add(exitButton);
         exitButton.addActionListener(ae -> dispose());
-        if (!showingSendingButton) {
-            sendMailButton.hide();
-        }
 
         getContentPane().add(southPanel, BorderLayout.SOUTH);
     }
