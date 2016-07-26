@@ -14,10 +14,12 @@ import java.sql.SQLException;
  */
 public class MailDBWorker {
     private static final String DUBLICATE_KEY_VALUE_ERROR = "23505";
-    public static void addMailInDataBase(String mail, String companyName) {
+    private static final int NOT_SENDED = 0;
+
+    public static void addMailInDataBase(String mail, String companyName) throws DublicateMailException {
         Connection connection = JdbcHelper.getConnection();
 
-        String sql = "INSERT INTO EMAILS(E_MAIL, IS_SENDED, COMPANY_NAME) VALUES (?,0,?)";
+        String sql = "INSERT INTO EMAILS(E_MAIL, IS_SENDED, COMPANY_NAME) VALUES (?,NOT_SENDED,?)";
 
         PreparedStatement preparedStatement = null;
         try {

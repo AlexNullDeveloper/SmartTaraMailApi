@@ -38,6 +38,20 @@ public class MainFrame extends JFrame {
         leftPointX = screen.width / 4;
     }
 
+    public static int getTopPointY() {
+        return topPointY;
+    }
+
+    public static int getLeftPointX() {
+        return leftPointX;
+    }
+
+    public static Dimension getScreen() {
+        return screen;
+    }
+
+
+
     public MainFrame(String nameOfFrame, String nameOfDB) {
         super("SmartTara. " + nameOfFrame + ". База " + nameOfDB);
         setResizable(false);

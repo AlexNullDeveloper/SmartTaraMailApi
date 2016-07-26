@@ -13,7 +13,7 @@ import java.io.*;
 public class MailFileWorker {
     private static boolean isOk = true;
 
-    public static boolean addMailIntoFile(String mail) {
+    public static boolean addMailIntoFile(String mail) throws CantMakeDirsException, AllreadyInFileException {
         final String mailsPath = "C:\\mail\\csv";
         File dirWithMails = new File(mailsPath);
 
@@ -33,7 +33,7 @@ public class MailFileWorker {
         return isOk;
     }
 
-    private static void writeMailToFile(String mail, String mailsPath) {
+    private static void writeMailToFile(String mail, String mailsPath) throws AllreadyInFileException {
 
         String pathToFile = mailsPath + "\\mails.csv";
 

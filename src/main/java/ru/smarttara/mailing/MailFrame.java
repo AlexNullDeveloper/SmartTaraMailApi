@@ -4,6 +4,7 @@ import ru.smarttara.appexceptions.AllreadyInFileException;
 import ru.smarttara.appexceptions.CantMakeDirsException;
 import ru.smarttara.appexceptions.DublicateMailException;
 import ru.smarttara.launcher.Launcher;
+import ru.smarttara.mainFrame.MainFrame;
 import ru.smarttara.workers.MailFileWorker;
 import ru.smarttara.workers.MailDBWorker;
 import ru.smarttara.mailsender.EmailSender;
@@ -23,24 +24,31 @@ public class MailFrame extends JFrame {
     private JTextField mailTextField;
     private JButton addInDBButton;
     private JTextField companyTextField;
+    private static Dimension screen;
+    private static final int windowHeight;
+    private static final int windowWidth;
+    private ButtonGroup buttonGroup;
+    private JComboBox checkBoxEmails;
+
+    static {
+        screen = MainFrame.getScreen();
+        windowHeight = screen.height * 45 / 100;
+        windowWidth = screen.width * 34 / 100;
+    }
 
     public JComboBox getCheckBoxEmails() {
         return checkBoxEmails;
     }
 
-    private JComboBox checkBoxEmails;
-
     public ButtonGroup getButtonGroup() {
         return buttonGroup;
     }
 
-    private ButtonGroup buttonGroup;
-
     public MailFrame(String nameOfFrame) {
         super(nameOfFrame);
         init();
-        //TODO правильные отступы у экрана замутить от размера экрана
-        setBounds(400, 200, 640, 480);
+
+        setBounds(MainFrame.getLeftPointX(), MainFrame.getTopPointY(), windowWidth, windowHeight);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
