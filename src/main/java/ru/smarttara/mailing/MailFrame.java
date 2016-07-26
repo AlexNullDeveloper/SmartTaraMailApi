@@ -1,4 +1,4 @@
-package ru.smarttara.presenter;
+package ru.smarttara.mailing;
 
 import ru.smarttara.appexceptions.AllreadyInFileException;
 import ru.smarttara.appexceptions.CantMakeDirsException;

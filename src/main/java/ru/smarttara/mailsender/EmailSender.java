@@ -1,13 +1,12 @@
 package ru.smarttara.mailsender;
 
 import ru.smarttara.launcher.Launcher;
-import ru.smarttara.presenter.MailFrame;
+import ru.smarttara.mailing.MailFrame;
 import ru.smarttara.util.JdbcHelper;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

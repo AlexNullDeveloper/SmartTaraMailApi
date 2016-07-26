@@ -5,7 +5,7 @@ package ru.smarttara.mainFrame;
  */
 
 import ru.smarttara.catalogs.CatalogOfEmails;
-import ru.smarttara.presenter.MailFrame;
+import ru.smarttara.mailing.MailFrame;
 import ru.smarttara.version.VersionFrame;
 
 import java.awt.Dimension;
@@ -24,11 +24,19 @@ public class MainFrame extends JFrame {
      *
      */
     private static final long serialVersionUID = 1L;
-    private static final int APPLICATION_HEIGHT = 768;
-    private static final int APPLICATION_WIDTH = 1024;
-    private int topPointY;
-    private int leftPointX;
-    private static String sysdate = null;
+    private static int topPointY;
+    private static int leftPointX;
+    private static Dimension screen;
+    private static final int applicationHeight;
+    private static final int applicationWidth;
+
+    static {
+        screen = Toolkit.getDefaultToolkit().getScreenSize();
+        applicationHeight = screen.height * 55 / 100;
+        applicationWidth = screen.width * 42 / 100;
+        topPointY = screen.height / 4;
+        leftPointX = screen.width / 4;
+    }
 
     public MainFrame(String nameOfFrame, String nameOfDB) {
         super("SmartTara. " + nameOfFrame + ". База " + nameOfDB);
@@ -39,11 +47,7 @@ public class MainFrame extends JFrame {
         initComponents(mainMenuBar);
         setJMenuBar(mainMenuBar);
         pack();
-
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        topPointY = (screen.height - APPLICATION_HEIGHT) / 2;
-        leftPointX = (screen.width - APPLICATION_WIDTH) / 2;
-        setBounds(leftPointX, topPointY, APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        setBounds(leftPointX, topPointY, applicationWidth, applicationHeight);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }

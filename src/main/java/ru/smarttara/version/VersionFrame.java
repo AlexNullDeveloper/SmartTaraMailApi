@@ -12,7 +12,7 @@ public class VersionFrame extends JFrame {
 
     private static final String COPYRIGHT_SYMBOL = "\u00a9";
     private static final String AUTOR = "Автор: \t Талисманов Александр";
-    private static final String COPYRIGHT_STRING = COPYRIGHT_SYMBOL + " Talismanov Inc. Все права защищены";
+    private static final String COPYRIGHT_STRING = COPYRIGHT_SYMBOL + " SmartTara Inc :) Все права защищены";
     private static final String VERSION_OF_PROGRAM = "Версия программы: \t 1.0.0";
     private static final int WIDTH_OF_FRAME = 240;
     private static final int HEIGHT_OF_FRAME = 80;
@@ -23,6 +23,7 @@ public class VersionFrame extends JFrame {
     private static final int HGAP = 1;
     private static final int VGAP = 1;
     private final JPanel mainPanel;
+
 
     public VersionFrame(String title) throws HeadlessException {
         super(title);

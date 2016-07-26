@@ -24,7 +24,7 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <finalName>helloworld</finalName>
+                    <finalName>SmartTaraCRM</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
@@ -35,6 +35,7 @@
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
+
                 </configuration>
                 <executions>
                     <execution>
@@ -45,6 +46,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <outputEncoding>UTF-8</outputEncoding>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -105,5 +114,11 @@
         </dependency>
 
     </dependencies>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <outputEncoding>UTF-8</outputEncoding>
+    </properties>
 
 </project>
