@@ -1,6 +1,7 @@
 package ru.smarttara.catalogs;
 
 /**
+ * Model class that represents Email
  * Created by ZXCASD on 17.07.2016.
  */
 public class Email {

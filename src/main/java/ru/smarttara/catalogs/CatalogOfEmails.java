@@ -7,66 +7,77 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 /**
- * Фрейм для реестра документов
+ * class that represents presenter for catalog of emails
  *
  * @author aleksander_talismanov
  * @version alpha 1.00 11.03.2016
  */
 public class CatalogOfEmails extends JFrame {
-
-    private static final int FRAME_WIDTH = 800;
-    private static final int FRAME_HEIGHT = 450;
-
-    private static JTable jTableEmails = null;
-    private static JPanel pane;
-    private static TableColumnModel tableColumnModel = null;
-    private static DefaultTableModel tableModelEmail = null;
-    private static JScrollPane jscrollPane = null;
-
-    //
-
-    // здесь мы будем хранить названия столбцов
-    private static Vector<String> columnNames;
-    // список типов столбцов
-    private static Vector<Object> columnTypes = new Vector<Object>();
-    // хранилище для полученных данных из базы данных
-    private static Vector<Vector<Object>> data;
-
-    private static DefaultTableModel tableModel;
-
-    private JButton buttonDelete;
-
-    public static DefaultTableModel getTableModel() {
-        return tableModel;
-    }
-
-    public static JScrollPane getJScrollPane() {
-        return jscrollPane;
-    }
-
+    //TODO make elastic width and height
 
     /**
+     * width of frame
+     */
+    private static final int FRAME_WIDTH = 800;
+
+    /**
+     * height of frame
+     */
+    private static final int FRAME_HEIGHT = 450;
+
+    /**
+     * table of frame
+     */
+    private static JTable jTableEmails = null;
+    /**
+     * main JPanel of frame
+     */
+    private static JPanel pane;
+
+    /**
+     * table model for emails
+     */
+    private static DefaultTableModel tableModelEmail = null;
+
+    /**
+     * scroll pane for frame
+     */
+    private static JScrollPane jscrollPane = null;
+
+    /**
+     * names of columns
+     */
+    private static Vector<String> columnNames;
+
+    /**
+     * list of types of columns
+     */
+    private static Vector<Object> columnTypes = new Vector<Object>();
+
+    /**
+     * data stored from database
+     */
+    private static Vector<Vector<Object>> data;
+
+    /**
+     * Constructor
      * конструктор фрейма реестра документов
+     * @param nameOfFrame title for frame
      */
     public CatalogOfEmails(String nameOfFrame) {
         super(nameOfFrame);
-        //берем размеры скрина на будущее
+        //TODO сделать размеры скрина
 
         pane = (JPanel) getContentPane();
         setResizable(false);
         pack();
-
 
         JPanel centerPanel = new JPanel();
         pane.add(centerPanel, BorderLayout.CENTER);
@@ -74,9 +85,6 @@ public class CatalogOfEmails extends JFrame {
         //скролл с табличкой центральная группа растянутая по всю ширину
         jscrollPane = makeJScrollPane();
 
-
-        //баг jscrollPane.getVerticalScrollBar().addAdjustmentListener(new MyAdjustmentListener());
-//        jscrollPane.setBounds(2,25,790,200);
         centerPanel.add(jscrollPane);
 
         JPanel topPanel = new JPanel(new FlowLayout());
@@ -98,9 +106,7 @@ public class CatalogOfEmails extends JFrame {
     public static JScrollPane makeJScrollPane() {
         ResultSet resultSet = CatalogOfEmailsDB.getResultSetFromTableEmails();
 
-
         jTableEmails = new JTable(buildTableModelEmail(resultSet));
-
 
         //Таблица с выравниванием по ширине
         if (tableModelEmail == null) {
@@ -129,12 +135,13 @@ public class CatalogOfEmails extends JFrame {
             }
 
         };
-
         return jscrlp;
     }
 
     /**
-     * Делаем модель таблички EMAILS
+     * Builds tablemodel from resultset
+     *
+     * @param rs ResultSet from which populates DefaultTableModel for JTable
      */
     public static DefaultTableModel buildTableModelEmail(ResultSet rs) {
         try {
@@ -162,7 +169,11 @@ public class CatalogOfEmails extends JFrame {
         return new DefaultTableModel(data, columnNames);
     }
 
-    // получение данных из объекта ResultSet
+    /**
+     * Sets data source
+     *
+     * @param rs resultset which helps to revalidate and repaint content
+     */
     public static void setDataSource(ResultSet rs) throws Exception {
 
         System.out.println("setDataSource method");
@@ -237,7 +248,12 @@ public class CatalogOfEmails extends JFrame {
         jscrollPane.setVisible(true);
     }
 
+    /**
+     * testing frame individually
+     */
     public static void main(String[] args) {
-        CatalogOfEmails catalogOfEmails = new CatalogOfEmails("Каталог электронный почт");
+        SwingUtilities.invokeLater(() -> {
+            new CatalogOfEmails("Каталог электронный почт");
+        });
     }
 }
