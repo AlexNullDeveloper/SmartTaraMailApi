@@ -1,6 +1,7 @@
 package ru.smarttara.mailing;
 
 import ru.smarttara.mainFrame.MainFrame;
+import ru.smarttara.mainFrame.Parameters;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,8 +110,8 @@ public class MailSettingsFrame extends JFrame {
 
         if (timesLoaded == 1) {
             Map<String, String> map = MainFrame.getApplicationParametersMap();
-            setMailSubjectTextFieldString(map.get("Заголовок письма"));
-            setTextOfMailTextAreaString(map.get("Текст письма"));
+            setMailSubjectTextFieldString(map.get(Parameters.EMAIL_HEADER_PARAM));
+            setTextOfMailTextAreaString(map.get(Parameters.MAIL_TEXT_PARAM));
         } else {
             MailSettingsDBWorker.populateFieldsWithData(this);
         }
