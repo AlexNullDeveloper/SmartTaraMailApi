@@ -71,7 +71,7 @@ public class EmailReader {
 
         String host = "imap.yandex.ru";// change accordingly
         String mailStoreType = "imap";
-        String username = "talismanoff1990@yandex.ru";// change accordingly
+        String username = "youremail@yandex.ru";// change accordingly
         String password = "*********";// change accordingly
 
         check(host, mailStoreType, username, password);

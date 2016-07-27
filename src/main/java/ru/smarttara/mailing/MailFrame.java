@@ -49,7 +49,7 @@ public class MailFrame extends JFrame {
         init();
 
         setBounds(MainFrame.getLeftPointX(), MainFrame.getTopPointY(), windowWidth, windowHeight);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
 

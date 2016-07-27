@@ -2,6 +2,8 @@ package ru.smarttara.mailsender;
 
 import ru.smarttara.launcher.Launcher;
 import ru.smarttara.mailing.MailFrame;
+import ru.smarttara.mainFrame.MainFrame;
+import ru.smarttara.mainFrame.Parameters;
 import ru.smarttara.util.JdbcHelper;
 
 import javax.mail.*;
@@ -40,7 +42,7 @@ public class EmailSender {
                     InternetAddress.parse(mailTo));
             message.setSubject("Testing Subject");
 
-            String textOfMessage = getMessageString();
+            String textOfMessage = MainFrame.getApplicationParametersMap().get(Parameters.MAIL_TEXT_PARAM);//getMessageString();
 
             message.setText(textOfMessage);
 
@@ -135,7 +137,7 @@ public class EmailSender {
         Message message = new MimeMessage(session);
         setMessage(message, email);
 
-        String textOfMessage = getMessageString();
+        String textOfMessage = MainFrame.getApplicationParametersMap().get(Parameters.MAIL_TEXT_PARAM); //getMessageString();
 
         message.setText(textOfMessage);
 
@@ -186,7 +188,7 @@ public class EmailSender {
         try {
             Message message = new MimeMessage(session);
             setMessage(message);
-            String textOfMessage = getMessageString();
+            String textOfMessage = MainFrame.getApplicationParametersMap().get(Parameters.MAIL_TEXT_PARAM); //getMessageString();
             message.setText(textOfMessage);
             Transport.send(message);
 
@@ -215,8 +217,7 @@ public class EmailSender {
         message.setFrom(new InternetAddress(Launcher.getEmailFrom()));
         message.setRecipients(Message.RecipientType.TO,
                 InternetAddress.parse(emailTo));
-        //TODO заменить на правильное и убрать в базу
-        message.setSubject("Коммерческое предложение");
+        message.setSubject(MainFrame.getApplicationParametersMap().get(Parameters.EMAIL_HEADER_PARAM));
     }
 
 
