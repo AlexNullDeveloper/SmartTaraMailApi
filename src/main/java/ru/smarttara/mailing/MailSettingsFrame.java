@@ -3,7 +3,6 @@ package ru.smarttara.mailing;
 import ru.smarttara.mainFrame.MainFrame;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Map;
 
@@ -94,7 +93,14 @@ public class MailSettingsFrame extends JFrame {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        bottomPanel.add(new JButton("Сохранить"));
+        JButton saveButton = new JButton("Сохранить");
+        //TODO проверять на то, что поля были изменены по успеху окошко поднимать
+        saveButton.addActionListener(ae -> {
+            MailSettingsDBWorker.saveSettingsInDB(this);
+            JOptionPane.showMessageDialog(MailSettingsFrame.this, "новые параметры письма успешно сохранены в базу",
+                    "Успех", JOptionPane.INFORMATION_MESSAGE);
+        });
+        bottomPanel.add(saveButton);
 
         JButton exitButton = new JButton("Выход");
         exitButton.addActionListener(ae -> dispose());

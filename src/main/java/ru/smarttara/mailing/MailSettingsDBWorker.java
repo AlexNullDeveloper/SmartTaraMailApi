@@ -46,4 +46,32 @@ public class MailSettingsDBWorker {
             e.printStackTrace();
         }
     }
+
+    public static void saveSettingsInDB(MailSettingsFrame mailSettingsFrame) {
+        Connection connection = JdbcHelper.getConnection();
+        String sql = "UPDATE APP_DATA SET PARAM_TEXT_VALUE = ? WHERE PARAM_NAME = ?";
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,mailSettingsFrame.getMailSubjectTextField().getText());
+            preparedStatement.setString(2,Parameters.EMAIL_HEADER_PARAM);
+
+            preparedStatement.executeUpdate();
+
+            preparedStatement.setString(1, mailSettingsFrame.getTextOfMailTextArea().getText());
+            preparedStatement.setString(2, Parameters.MAIL_TEXT_PARAM);
+            preparedStatement.executeUpdate();
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
 }
