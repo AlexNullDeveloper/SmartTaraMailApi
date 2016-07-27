@@ -92,7 +92,9 @@ public class MailFrame extends JFrame {
         //TODO убрать в базу
         String[] testEmailsListing = {
                 "talismanoff1990@yandex.ru",
-                "mslide@mail.ru"
+                "mslide@mail.ru",
+                "smarttara@yandex.ru",
+                "alexandr.shagin@gmail.com"
         };
         checkBoxEmails = new JComboBox<>(testEmailsListing);
 
