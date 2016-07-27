@@ -165,10 +165,15 @@ public class MailFrame extends JFrame {
         sendMailButton = new JButton("отправить почту");
         southPanel.add(sendMailButton);
         sendMailButton.addActionListener(ae -> {
+            //TODO обдумать некорректное завершение методов и соответствующие JOptionPane
             if (radioButtonTesting.isSelected()) {
                 EmailSender.sendTestEmail(this);
+                JOptionPane.showMessageDialog(MailFrame.this, "Тестовое сообщение успешно отправлено",
+                        "Успех", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 EmailSender.sendRealEmail(this);
+                JOptionPane.showMessageDialog(MailFrame.this, "Осуществлена реальная отправка",
+                        "Успех", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 

@@ -19,17 +19,18 @@ public class MailDBWorker {
     public static void addMailInDataBase(String mail, String companyName) throws DublicateMailException {
         Connection connection = JdbcHelper.getConnection();
 
-        String sql = "INSERT INTO EMAILS(E_MAIL, IS_SENDED, COMPANY_NAME) VALUES (?,NOT_SENDED,?)";
+        String sql = "INSERT INTO EMAILS(E_MAIL, IS_SENDED, COMPANY_NAME, ADDING_DATE) VALUES (?,?,?,now())";
 
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,mail);
-            preparedStatement.setString(2,companyName);
+            preparedStatement.setInt(2,NOT_SENDED);
+            preparedStatement.setString(3,companyName);
             preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
-
+            //TODO обработать другую ошибку и вывести на форму сообщение
             Launcher.logger.debug("e.getMessage()" + e.getMessage());
             try {
                 connection.rollback();
