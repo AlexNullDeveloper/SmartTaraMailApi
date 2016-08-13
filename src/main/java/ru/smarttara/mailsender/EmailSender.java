@@ -1,5 +1,6 @@
 package ru.smarttara.mailsender;
 
+import com.sun.javaws.exceptions.LaunchDescException;
 import ru.smarttara.launcher.Launcher;
 import ru.smarttara.mailing.MailFrame;
 import ru.smarttara.mainFrame.MainFrame;
@@ -114,17 +115,22 @@ public class EmailSender {
                     preparedStatement = connection.prepareStatement(sql);
                     preparedStatement.setString(1,e_mail);
                     preparedStatement.executeUpdate();
-                    connection.commit();
                     preparedStatement = connection.prepareStatement(AUDIT_INSERT_SQL);
                     preparedStatement.setString(1, Launcher.getEmailFrom());
                     preparedStatement.setString(2, e_mail);
                     preparedStatement.executeUpdate();
                     connection.commit();
                     Launcher.logger.debug("добавили в таблицу почту " + e_mail);
+                    Thread.sleep(30000);
                 } catch (MessagingException e) {
                     Launcher.logger.fatal("MessagingException",e);
+                    Launcher.logger.debug("e.getCause() " + e.getCause());
+                    Launcher.logger.debug("e.getClass().getCanonicalName() " + e.getClass().getCanonicalName());
+                    Launcher.logger.debug("e.getMessage() " + e.getMessage());
                     connection.rollback();
                     throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    Launcher.logger.fatal("InterruptedException", e);
                 }
             }
             Launcher.logger.debug("закончились все почты");
@@ -142,61 +148,6 @@ public class EmailSender {
         message.setText(textOfMessage);
 
         Transport.send(message);
-    }
-
-    private static String getMessageString() {
-        //TODO убрать в базу
-        return "Компания Smarttara поможет Вам в разработке и изготовлении" +
-                " промышленной и транспортной тары различной сложности.\n" +
-                "\n" +
-                "Осуществляем полный цикл разработки тары - от макета (3D-модели) " +
-                "до готового изделия, а также, при необходимости, реализацию отдельных её стадий:\n" +
-                "\n" +
-                "* сбор и анализ требований (условия эксплуатации, транспортирования " +
-                "и хранения, материалы, специальные требования);\n" +
-                "\n" +
-                "* разработка макета (3D-модель);\n" +
-                "\n" +
-                "* разработка конструкторской и эксплуатационной документации;\n" +
-                "\n" +
-                "* изготовление опытных образцов;\n" +
-                "\n" +
-                "* проведение испытаний (при необходимости).\n" +
-                "\n" +
-                "Разработка осуществляется в соответствии с ГОСТ и отраслевыми стандартами.\n" +
-                "\n" +
-                "Возможно использование различных датчиков для контроля сохранности грузов.\n" +
-                "\n" +
-                "Для оценки сроков и стоимости работ Вы можете оформить заявку на сайте " +
-                "smarttara.ru или связаться с нами любым удобным способом:\n" +
-                "\n" +
-                "Телефон: 8-985-455-28-90\n" +
-                "\n" +
-                "Эл. почта: smarttara.inbox@gmail.com\n" +
-                "\n" +
-                "Сайт: smarttara.ru\n" +
-                "\n" +
-                "Контактное лицо: Александр, Павел.";
-    }
-
-
-    public static void main(String[] args) {
-        Properties props = getProperties();
-
-        Session session = getSession(args[0], args[1], props);
-
-        try {
-            Message message = new MimeMessage(session);
-            setMessage(message);
-            String textOfMessage = MainFrame.getApplicationParametersMap().get(Parameters.MAIL_TEXT_PARAM); //getMessageString();
-            message.setText(textOfMessage);
-            Transport.send(message);
-
-            Launcher.logger.debug("Done");
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private static Session getSession(String login, String password, Properties props) {
@@ -242,5 +193,26 @@ public class EmailSender {
 
         return "smtp." + workingWith.substring(index + 1);
     }
+
+
+    public static void main(String[] args) {
+        Properties props = getProperties();
+
+        Session session = getSession(args[0], args[1], props);
+
+        try {
+            Message message = new MimeMessage(session);
+            setMessage(message);
+            String textOfMessage = MainFrame.getApplicationParametersMap().get(Parameters.MAIL_TEXT_PARAM); //getMessageString();
+            message.setText(textOfMessage);
+            Transport.send(message);
+
+            Launcher.logger.debug("Done");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
 
