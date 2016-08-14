@@ -6,10 +6,14 @@ import ru.smarttara.mailing.MailFrame;
 import ru.smarttara.mainFrame.MainFrame;
 import ru.smarttara.mainFrame.Parameters;
 import ru.smarttara.util.JdbcHelper;
+import ru.smarttara.util.ProcessFrame;
+import ru.smarttara.util.ProgressBarRunnable;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.swing.*;
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -88,17 +92,27 @@ public class EmailSender {
         }
     }
 
-    public static void sendRealEmail(MailFrame mailFrame) {
+    public static void sendRealEmail(MailFrame mailFrame, ProcessFrame processFrame) {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        String countSql = "SELECT COUNT(*) FROM EMAILS WHERE IS_SENDED = 0";
         String sql = "SELECT E_MAIL FROM EMAILS WHERE IS_SENDED = 0";
         try {
             connection = JdbcHelper.getConnection();
+            preparedStatement = connection.prepareStatement(countSql);
+            resultSet = preparedStatement.executeQuery();
+            double resultSetSize = 0;
+            if (resultSet.next()) {
+                resultSetSize = resultSet.getInt(1);
+            }
             preparedStatement = connection.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
+            double stepOfProgress = getStepOfProgress(resultSetSize);
+            processFrame.setStepOfProgress(stepOfProgress);
             String e_mail = "";
+            double progress = 0;
             while (resultSet.next()) {
                 e_mail = resultSet.getString("E_MAIL");
                 Launcher.logger.debug("e_mail we working with " + e_mail);
@@ -109,7 +123,8 @@ public class EmailSender {
                 Session session = getSession(Launcher.getEmailFrom(), Launcher.getPassword(), props);
 
                 try {
-                    sendMessageToEmail(session, e_mail);
+                    //TODO вернуть назад после тестирования
+//                    sendMessageToEmail(session, e_mail);
                     Launcher.logger.debug("Успешно отправлено письмо на почту " + e_mail);
                     sql = "UPDATE EMAILS SET IS_SENDED = 1 WHERE E_MAIL = ?";
                     preparedStatement = connection.prepareStatement(sql);
@@ -121,22 +136,43 @@ public class EmailSender {
                     preparedStatement.executeUpdate();
                     connection.commit();
                     Launcher.logger.debug("добавили в таблицу почту " + e_mail);
-                    Thread.sleep(30000);
-                } catch (MessagingException e) {
-                    Launcher.logger.fatal("MessagingException",e);
-                    Launcher.logger.debug("e.getCause() " + e.getCause());
-                    Launcher.logger.debug("e.getClass().getCanonicalName() " + e.getClass().getCanonicalName());
-                    Launcher.logger.debug("e.getMessage() " + e.getMessage());
-                    connection.rollback();
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
+//                    progress += stepOfProgress;
+//                    EventQueue.invokeLater(() -> processFrame.getjProgressBar().setValue((int) Math.round(processFrame.getjProgressBar().getValue() + stepOfProgress)));
+//                    EventQueue.invokeLater(() -> processFrame.getjProgressBar().setString(String.valueOf(Math.round(processFrame.getjProgressBar().getValue() + stepOfProgress)) +"%"));
+                    EventQueue.invokeLater(new ProgressBarRunnable(processFrame, stepOfProgress));
+//                    Thread.sleep(30000);
+                    Thread.sleep(20);
+                }
+//                catch (MessagingException e) {
+//                    Launcher.logger.fatal("MessagingException",e);
+//                    Launcher.logger.debug("e.getCause() " + e.getCause());
+//                    Launcher.logger.debug("e.getClass().getCanonicalName() " + e.getClass().getCanonicalName());
+//                    Launcher.logger.debug("e.getMessage() " + e.getMessage());
+//                    connection.rollback();
+//                    throw new RuntimeException(e);
+//                }
+                catch (InterruptedException e) {
                     Launcher.logger.fatal("InterruptedException", e);
                 }
             }
+            EventQueue.invokeLater(() -> {
+                processFrame.getjProgressBar().setValue(100);
+                processFrame.dispose();
+                JOptionPane.showMessageDialog(mailFrame, "Осуществлена реальная отправка",
+                        "Успех", JOptionPane.INFORMATION_MESSAGE);
+            });
             Launcher.logger.debug("закончились все почты");
         } catch (SQLException e) {
             Launcher.logger.error("Exception in EmailSender",e);
         }
+    }
+
+    private static double getStepOfProgress(double resultSetSize) {
+        double stepOfProgress = 100.00;
+        if (resultSetSize > 0) {
+            stepOfProgress = 100.00 / resultSetSize;
+        }
+        return stepOfProgress;
     }
 
     private static void sendMessageToEmail(Session session, String email) throws MessagingException {
@@ -213,6 +249,5 @@ public class EmailSender {
             throw new RuntimeException(e);
         }
     }
-
 }
 
