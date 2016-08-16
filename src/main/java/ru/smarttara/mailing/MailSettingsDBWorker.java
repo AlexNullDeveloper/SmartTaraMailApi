@@ -61,7 +61,7 @@ public class MailSettingsDBWorker {
             preparedStatement.setString(1, mailSettingsFrame.getTextOfMailTextArea().getText());
             preparedStatement.setString(2, Parameters.MAIL_TEXT_PARAM);
             preparedStatement.executeUpdate();
-
+            //TODO записать измения в мапу
             connection.commit();
 
         } catch (SQLException e) {

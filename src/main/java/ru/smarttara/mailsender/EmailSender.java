@@ -9,7 +9,12 @@ import ru.smarttara.util.JdbcHelper;
 import ru.smarttara.util.ProcessFrame;
 import ru.smarttara.util.ProgressBarRunnable;
 
-import javax.mail.*;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.swing.*;
@@ -47,7 +52,12 @@ public class EmailSender {
                     InternetAddress.parse(mailTo));
             message.setSubject("Testing Subject");
 
-            String textOfMessage = MainFrame.getApplicationParametersMap().get(Parameters.MAIL_TEXT_PARAM);//getMessageString();
+            String companyName = "COMPANY NAME THAT REPLACES";
+
+            String textOfMessage = MainFrame
+                    .getApplicationParametersMap()
+                    .get(Parameters.MAIL_TEXT_PARAM)
+                    .replace(":company_name",companyName);//getMessageString();
 
             message.setText(textOfMessage);
 
@@ -124,7 +134,7 @@ public class EmailSender {
 
                 try {
                     //TODO вернуть назад после тестирования
-//                    sendMessageToEmail(session, e_mail);
+                    sendMessageToEmail(session, e_mail);
                     Launcher.logger.debug("Успешно отправлено письмо на почту " + e_mail);
                     sql = "UPDATE EMAILS SET IS_SENDED = 1 WHERE E_MAIL = ?";
                     preparedStatement = connection.prepareStatement(sql);
@@ -136,21 +146,17 @@ public class EmailSender {
                     preparedStatement.executeUpdate();
                     connection.commit();
                     Launcher.logger.debug("добавили в таблицу почту " + e_mail);
-//                    progress += stepOfProgress;
-//                    EventQueue.invokeLater(() -> processFrame.getjProgressBar().setValue((int) Math.round(processFrame.getjProgressBar().getValue() + stepOfProgress)));
-//                    EventQueue.invokeLater(() -> processFrame.getjProgressBar().setString(String.valueOf(Math.round(processFrame.getjProgressBar().getValue() + stepOfProgress)) +"%"));
                     EventQueue.invokeLater(new ProgressBarRunnable(processFrame, stepOfProgress));
-//                    Thread.sleep(30000);
-                    Thread.sleep(20);
+                    Thread.sleep(30000);
                 }
-//                catch (MessagingException e) {
-//                    Launcher.logger.fatal("MessagingException",e);
-//                    Launcher.logger.debug("e.getCause() " + e.getCause());
-//                    Launcher.logger.debug("e.getClass().getCanonicalName() " + e.getClass().getCanonicalName());
-//                    Launcher.logger.debug("e.getMessage() " + e.getMessage());
-//                    connection.rollback();
-//                    throw new RuntimeException(e);
-//                }
+                catch (MessagingException e) {
+                    Launcher.logger.fatal("MessagingException",e);
+                    Launcher.logger.debug("e.getCause() " + e.getCause());
+                    Launcher.logger.debug("e.getClass().getCanonicalName() " + e.getClass().getCanonicalName());
+                    Launcher.logger.debug("e.getMessage() " + e.getMessage());
+                    connection.rollback();
+                    throw new RuntimeException(e);
+                }
                 catch (InterruptedException e) {
                     Launcher.logger.fatal("InterruptedException", e);
                 }
@@ -179,7 +185,26 @@ public class EmailSender {
         Message message = new MimeMessage(session);
         setMessage(message, email);
 
-        String textOfMessage = MainFrame.getApplicationParametersMap().get(Parameters.MAIL_TEXT_PARAM); //getMessageString();
+//        String textOfMessage = MainFrame.getApplicationParametersMap().get(Parameters.MAIL_TEXT_PARAM); //getMessageString();
+        Connection connection = JdbcHelper.getConnection();
+        String sql = "SELECT COMPANY_NAME FROM EMAILS WHERE E_MAIL = ?";
+        String companyName = "";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                companyName = resultSet.getString("e_mail");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        String textOfMessage = MainFrame
+                .getApplicationParametersMap()
+                .get(Parameters.MAIL_TEXT_PARAM)
+                .replace(":company_name",companyName); //getMessageString();
 
         message.setText(textOfMessage);
 
@@ -233,7 +258,6 @@ public class EmailSender {
 
     public static void main(String[] args) {
         Properties props = getProperties();
-
         Session session = getSession(args[0], args[1], props);
 
         try {
